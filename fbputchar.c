@@ -14,6 +14,7 @@
 #include "fbputchar.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <string.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
@@ -104,8 +105,16 @@ void scrollline(int row, char up){
   }
 }
 
-void drawline(int row, int height){
-  for(int x = 0; )
+void drawHorizontalLine(int row, int height){
+  int x;
+  for(x = 0; x < fb_vinfo.xres; x++ ){
+    unsigned char *pixel = framebuffer + (row * FONT_HEIGHT * 2 + height) * fb_finfo.line_length + x * 4;
+    pixel[0] = 255;
+    pixel[1] = 255;
+    pixel[2] = 255;
+    pixel[3] = 0;
+    pixel += 4;
+  }
 }
 
 /*

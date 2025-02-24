@@ -62,6 +62,9 @@ int main()
   }
 
   fbputs("Hello CSEE 4840 World!", 4, 10);
+  draw
+
+
 
   /* Open the keyboard */
   if ( (keyboard = openkeyboard(&endpoint_address)) == NULL ) {
@@ -99,8 +102,9 @@ int main()
 			      (unsigned char *) &packet, sizeof(packet),
 			      &transferred, 0);
     if (transferred == sizeof(packet)) {
-      sprintf(keystate, "%02x %02x %02x", packet.modifiers, packet.keycode[0],
-	      packet.keycode[1]);
+      sprintf(keystate, "%02x %02x %02x %02x %02x %02x %02x", packet.modifiers, packet.keycode[0],
+	      packet.keycode[1], packet.keycode[2], packet.keycode[3],
+        packet.keycode[4], packet.keycode[5]);
       printf("%s\n", keystate);
       fbputs(keystate, 6, 0);
       if (packet.keycode[0] == 0x29) { /* ESC pressed? */
