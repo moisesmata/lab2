@@ -13,6 +13,6 @@ extern void scrollline(int, char);
 extern void clearline(int);
 extern void clearscreen(void);
 extern void fbputs(const char *, int, int);
-extern void drawhorizontalline(int,int);
+extern void drawHorizontalLine(int,int);
 
 #endif
