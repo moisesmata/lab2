@@ -92,7 +92,7 @@ void scrollline(int row, char up){
     //The number of pixels in a row
     int rowSize = fb_vinfo.xres * 4 * FONT_HEIGHT;
     //The number of pixels in the screen
-    memcpy(framebuffer + rowSize*(row-1), framebuffer, rowSize * row, rowSize);
+    memcpy(framebuffer + rowSize*(row-1), framebuffer+ rowSize*row,  rowSize);
   }
   else{
     if(row == fb_vinfo.yres/FONT_HEIGHT - 1){
