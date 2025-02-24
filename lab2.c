@@ -62,7 +62,7 @@ int main()
   }
 
   fbputs("Hello CSEE 4840 World!", 4, 10);
-  draw
+  drawHorizontalLine(10, 1);
 
 
 
