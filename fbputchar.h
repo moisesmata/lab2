@@ -9,6 +9,10 @@
 
 extern int fbopen(void);
 extern void fbputchar(char, int, int);
+extern void scrollline(int, char);
+extern void clearline(int);
+extern void drawline(int, int);
+extern void clearscreen(void);
 extern void fbputs(const char *, int, int);
 
 #endif

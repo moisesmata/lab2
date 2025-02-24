@@ -55,6 +55,59 @@ int fbopen()
   return 0;
 }
 
+void clearscreen() {
+  int x, y;
+  unsigned char *pixel;
+  for (y = 0 ; y < fb_vinfo.yres ; y++) {
+    pixel = framebuffer + y * fb_finfo.line_length;
+    for (x = 0 ; x < fb_vinfo.xres ; x++) {
+      pixel[0] = 0;
+      pixel[1] = 0;
+      pixel[2] = 0;
+      pixel[3] = 0;
+      pixel += 4;
+    }
+  }
+}
+void clearline(int row){
+  int x, y;
+  unsigned char *pixel;
+  for (y = row * FONT_HEIGHT * 2 ; y < (row + 1) * FONT_HEIGHT * 2 ; y++) { //*2?
+    pixel = framebuffer + y * fb_finfo.line_length;
+    for (x = 0 ; x < fb_vinfo.xres ; x++) {
+      pixel[0] = 0;
+      pixel[1] = 0;
+      pixel[2] = 0;
+      pixel[3] = 0;
+      pixel += 4;
+    }
+  }
+}
+void scrollline(int row, char up){
+  if(up){
+    if(row == 0){
+      return;
+    }
+    //The number of pixels in a row
+    int rowSize = fb_vinfo.xres * 4 * FONT_HEIGHT;
+    //The number of pixels in the screen
+    memcpy(framebuffer + rowSize*(row-1), framebuffer, rowSize * row, rowSize);
+  }
+  else{
+    if(row == fb_vinfo.yres/FONT_HEIGHT - 1){
+      return;
+    }
+    //The number of pixels in a row
+    int rowSize = fb_vinfo.xres * 4 * FONT_HEIGHT;
+    //The number of pixels in the screen
+    memcpy(framebuffer+rowSize*(row+1), framebuffer + rowSize*(row), rowSize);
+  }
+}
+
+void drawline(int row, int height){
+  for(int x = 0; )
+}
+
 /*
  * Draw the given character at the given row/column.
  * fbopen() must be called first.
@@ -73,24 +126,24 @@ void fbputchar(char c, int row, int col)
     mask = 0x80;
     for (x = 0 ; x < FONT_WIDTH ; x++) {
       if (pixels & mask) {	
-	pixel[0] = 255; /* Red */
+	      pixel[0] = 255; /* Red */
         pixel[1] = 255; /* Green */
         pixel[2] = 255; /* Blue */
         pixel[3] = 0;
       } else {
-	pixel[0] = 0;
+	      pixel[0] = 0;
         pixel[1] = 0;
         pixel[2] = 0;
         pixel[3] = 0;
       }
       pixel += 4;
       if (pixels & mask) {
-	pixel[0] = 255; /* Red */
+	      pixel[0] = 255; /* Red */
         pixel[1] = 255; /* Green */
         pixel[2] = 255; /* Blue */
         pixel[3] = 0;
       } else {
-	pixel[0] = 0;
+	      pixel[0] = 0;
         pixel[1] = 0;
         pixel[2] = 0;
         pixel[3] = 0;
