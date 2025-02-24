@@ -80,7 +80,7 @@ void clearline(int row){
       pixel[1] = 0;
       pixel[2] = 0;
       pixel[3] = 0;
-      pixel += 4;
+      pixel += 4; 
     }
   }
 }
@@ -108,12 +108,12 @@ void scrollline(int row, char up){
 void drawHorizontalLine(int row, int height){
   int x;
   for(x = 0; x < fb_vinfo.xres; x++ ){
-    unsigned char *pixel = framebuffer + (row * FONT_HEIGHT + height) * fb_finfo.line_length + x ;
+    unsigned char *pixel = framebuffer + (row * FONT_HEIGHT * 2 + height) * fb_finfo.line_length + x ;
     pixel[0] = 255;
-    pixel[1] = 255;
+    pixel[1] = 0;
     pixel[2] = 255;
     pixel[3] = 0;
-    pixel += 4;
+    pixel += 4; //each pixel is 4 bits
   }
 }
 
