@@ -22,6 +22,7 @@
 #define SERVER_PORT 42000
 
 #define BUFFER_SIZE 128
+#define HOLD_COUNT 20
 
 /*
  * References:
@@ -39,6 +40,8 @@ uint8_t endpoint_address;
 
 pthread_t network_thread;
 void *network_thread_f(void *);
+
+void execute_key(uint8_t, uint8_t;
 
 int main()
 {
@@ -100,17 +103,49 @@ int main()
   /* Look for and handle keypresses */
   uint8_t held_char = 0;
   uint8_t held_mod = 0;
+  packet prev = {0, 0, {0, 0, 0, 0, 0, 0}};
+  uint8_t held_count = 0;
   for (;;) {
     libusb_interrupt_transfer(keyboard, endpoint_address,
 			      (unsigned char *) &packet, sizeof(packet),
 			      &transferred, 0);
     if (transferred == sizeof(packet)) {
-
-      sprintf(keystate, "%02x %02x %02x %02x %02x %02x %02x", packet.modifiers, packet.keycode[0],
-	      packet.keycode[1], packet.keycode[2], packet.keycode[3],
-        packet.keycode[4], packet.keycode[5]);
-      printf("%s\n", keystate);
-      fbputs(keystate, 6, 0);
+      uint8_t rightmost = 0;
+      for(int i = 0; i < 6; i++){
+        if(packet.keycode[i] == 0){
+          break;
+        }
+        rightmost = i;
+      }
+      if(rightmost == 0){
+        held_char = 0;
+        hend_mod = 0;
+        continue;
+      }
+      if(rightmost == held && packet.modifiers == held_mod){
+        if(held_count < HOLD_COUNT){
+          held_count++;
+          continue;
+        }
+        execute_key(rightmost, packet.modifiers);
+        continue;
+      }
+      uint8_t new = 1;
+      for(int i = 0; i < 6; i++){
+        if(packet.keycode[i] == 0){
+          break;
+        }
+        if(prev.keycode[i] == rightmost){
+          new = 0;
+          break;
+        }
+      }
+      if(new){
+        execute_key(rightmost, packet.modifiers);
+        held_char = rightmost;
+        held_mod = packet.modifiers;
+      }
+      prev = packet;
       if (packet.keycode[0] == 0x29) { /* ESC pressed? */
 	      break;
       }
@@ -126,6 +161,9 @@ int main()
   return 0;
 }
 
+void execute_key(uint8_t key, uint8_t modifiers){
+  // Need to map the usb ones into real chars, brutal.
+}
 void *network_thread_f(void *ignored)
 {
   char recvBuf[BUFFER_SIZE];

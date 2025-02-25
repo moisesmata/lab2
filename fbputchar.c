@@ -18,7 +18,6 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-
 #include <linux/fb.h>
 
 #define FBDEV "/dev/fb0"
@@ -74,7 +73,7 @@ void clearline(int row){
   int x, y;
   unsigned char *pixel;
   for (y = row * FONT_HEIGHT * 2 ; y < (row + 1) * FONT_HEIGHT * 2 ; y++) { //*2?
-    pixel = framebuffer + y * fb_finfo.line_length;
+    pixel = framebuffer + y * fb_vinfo.xres;
     for (x = 0 ; x < fb_vinfo.xres ; x++) {
       pixel[0] = 0;
       pixel[1] = 0;
