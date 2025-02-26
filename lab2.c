@@ -64,8 +64,7 @@ int main()
     fbputchar('*', 23, col);
   }
 
-  fbputs("Hello CSEE 4840 World!", 4, 10);
-  clearscreen();
+  fbputs("Hello CSEE 4840 World!Test", 4, 10);
   drawHorizontalLine(10, 1);
 
 
