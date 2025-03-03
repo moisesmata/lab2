@@ -23,6 +23,7 @@
 
 #define BUFFER_SIZE 128
 #define HOLD_COUNT 20
+#define SHIFT 2
 
 /*
  * References:
@@ -121,7 +122,7 @@ int main()
         hend_mod = 0;
         continue;
       }
-      if(rightmost == held && packet.modifiers == held_mod){
+      if(rightmost == held_char && packet.modifiers == held_mod){
         if(held_count < HOLD_COUNT){
           held_count++;
           continue;
@@ -160,9 +161,23 @@ int main()
   return 0;
 }
 
-void execute_key(uint8_t key, uint8_t modifiers){
-  // Need to map the usb ones into real chars, brutal.
+void execute_key(uint8_t key, uint8_t modifiers, int position, String & message){
+  if(key == 0x28){
+    if(message.size() > 0 && modifiers == 0){
+      write(sockfd, message.c_str(), message.size());
+      message = "";
+    } else if(modifiers == SHIFT){
+    } 
+  }
+  if(key > 3 && key < 30){
+    if(modifiers == SHIFT){
+      message.append(key + 61);
+    } else if (modifiers == 0){
+      message.append(key + 93);
+    }
+  }
 }
+
 void *network_thread_f(void *ignored)
 {
   char recvBuf[BUFFER_SIZE];
